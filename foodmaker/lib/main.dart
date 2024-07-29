@@ -252,9 +252,7 @@ class _FoodSelectionState extends State<FoodSelection> {
                     content: addOverrary(),
                   );
                 }).then((value) => {
-                  setState(() {
-                    debugPrint("$finalheat");
-                  })
+                  setState(() {})
                 });
               },
               child: Container(
@@ -340,7 +338,7 @@ class addOverrary extends StatelessWidget {
                               child:TextField(
                                 controller: n,
                                 autofocus: true,
-                                keyboardType: TextInputType.number,
+                                keyboardType: TextInputType.name,
                                 decoration: InputDecoration(labelText: "이름"),
                               ), 
                             ),
@@ -374,7 +372,7 @@ class addOverrary extends StatelessWidget {
                       ),
                       SizedBox(height: 10,),
                       ElevatedButton(onPressed: () {
-                        explore.add(Explore(name: n.text, time: [int.parse(t.text),int.parse(t.text)], heat: [int.parse(h.text),int.parse(h.text)], img: Image.asset("assets/raman.png")));
+                        explore.add(Explore(name: n.text, time: [int.parse(t.text),int.parse(t.text)], heat: [int.parse(h.text),int.parse(h.text)], img: Image.asset("assets/temp.png")));
                         Navigator.pop(context);
                       }, child: Icon(Icons.check))
                     ],

@@ -163,7 +163,7 @@ class _CookingState extends State<Cooking> {
                   height: screenheight/3,
                   width: screenheight,
                   decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.vertical(top: Radius.circular(40))),
-                  child: double.parse(S) > finalheat+10 ? Image.asset("assets/hot.png") : double.parse(S) < finalheat-10 ? Image.asset("assets/cold.png") : seconds > 30 ? Image.asset("assets/well.png") : Image.asset("assets/almost.png")
+                  child: double.parse(S) > finalheat+10 ? Image.asset("assets/hot.png") : double.parse(S) < finalheat-10 ? Image.asset("assets/cold.png") : seconds > 30 ? Image.asset("assets/well.png") : seconds == 0 ? Image.asset("assets/done.png") : Image.asset("assets/almost.png")
                 )
               )
             ],
