@@ -290,8 +290,6 @@ void readroop() {
       if(double.parse(S) - double.parse(preS) < -15) {
         S = preS;
       } //이전 값 대비 값이 튀면 버림 (블루투스 print 값 누락 문제 대응)
-
-      
     } //값이 실수값이 아니면 버림 (블루투스 print 값 누락 문제 대응)
 
     debugPrint(S);
