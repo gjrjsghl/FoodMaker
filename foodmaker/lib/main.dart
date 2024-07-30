@@ -9,7 +9,8 @@ Future<void> main() async {
   await SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
-  ]);
+  ]);  //화면 회전 고정
+
   runApp(const MyApp());
 }
 
@@ -33,8 +34,8 @@ class BasicBoard extends StatelessWidget {
   
   @override
   Widget build(BuildContext context) {
-    double screenHeight = MediaQuery.of(context).size.height;
-    double screenWidth = MediaQuery.of(context).size.width;
+    double screenHeight = MediaQuery.of(context).size.height; //화면크기
+    double screenWidth = MediaQuery.of(context).size.width;   //화면크기
     return Container(
       color: Colors.white,
       width: screenWidth,
@@ -54,9 +55,10 @@ class BasicBoard extends StatelessWidget {
             ),
           ),
           SizedBox(height: 50),
+
           Container(
             width: screenWidth, height: screenHeight-150,
-            child: SingleChildScrollView(
+            child: SingleChildScrollView(  //자판 올라올때 화면 안깨지게 막는 용도
               child: FoodSelection(),
             )
           )
@@ -75,15 +77,14 @@ class FoodSelection extends StatefulWidget {
   State<FoodSelection> createState() => _FoodSelectionState();
 }
 
-class _FoodSelectionState extends State<FoodSelection> {
+class _FoodSelectionState extends State<FoodSelection> { //음식 화면
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
 
-    debugPrint("Adsff");
-
+    //기본 음식 목록 추가
     myfood.add(Myfood(name: "계란후라이", time: [3,5], heat: [163,177],img: Image.asset("assets/eggfry.png")));
     myfood.add(Myfood(name: "라면", time: [5,5], heat: [100,100],img: Image.asset("assets/raman.png")));
     myfood.add(Myfood(name: "볶음밥", time: [5,5], heat: [100,100],img: Image.asset("assets/bokemrice.png")));
@@ -112,31 +113,30 @@ class _FoodSelectionState extends State<FoodSelection> {
               ),
               Container(
                 height: tempHeight-70, width: screenWidth,
-                child: ListView.separated(
+                child: ListView.separated( //가로 리스트
                   scrollDirection: Axis.horizontal,
                   itemCount: myfood.length,
                   itemBuilder: (BuildContext ctx, int idx) {
                     return GestureDetector(
-                      onTap: () {
+                      onTap: () { //도형 클릭 이벤트 감지
                         List<Myfood> temp = [];
                         temp.add(myfood[idx]);
                         myfood.removeAt(idx);
                         temp.addAll(myfood);
                         setState(() {
-                          myfood = temp.toList();
-                          
+                          myfood = temp.toList(); //toList() 붙여야 깊은 복사
                         });
-                        Navigator.push(context, MaterialPageRoute(builder: (context) => cookingInfo()));
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => cookingInfo())); //화면 넘기기
                       },
 
                       child: Stack(
                         children: [
                            Container(
                             decoration: BoxDecoration(
-                              color: Color.fromRGBO(239, 190, 111,1), //박스 색
-                              borderRadius: BorderRadius.circular(40), //둥글게 깎기 정도? 지름?
+                              color: Color.fromRGBO(239, 190, 111,1),
+                              borderRadius: BorderRadius.circular(40),
                             ),
-                            height: tempHeight-70, width: (tempHeight-100), //박스 크기
+                            height: tempHeight-70, width: (tempHeight-100),
 
                             child: Column(
                               children: [
@@ -186,17 +186,17 @@ class _FoodSelectionState extends State<FoodSelection> {
               ),
               Container(
                 height: tempHeight-70, width: screenWidth,
-                child: ListView.separated(
+                child: ListView.separated( //가로 리스트 만들기
                   scrollDirection: Axis.horizontal,
                   itemCount: explore.length,
                   itemBuilder: (BuildContext ctx, int idx) {
-                    return GestureDetector(
+                    return GestureDetector( //도형 클릭 감지
                       onTap: () {
                         setState(() {
                           explore[idx].move();
                           explore.removeAt(idx);
                         });
-                        Navigator.push(context, MaterialPageRoute(builder: (context) => cookingInfo()));
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => cookingInfo())); //화면 넘김
                       },
 
                       child: Stack(
@@ -204,9 +204,9 @@ class _FoodSelectionState extends State<FoodSelection> {
                            Container(
                             decoration: BoxDecoration(
                               color: Color.fromRGBO(239, 190, 111,1),
-                              borderRadius: BorderRadius.circular(40), //둥글게 깎기 정도? 지름?
+                              borderRadius: BorderRadius.circular(40),
                             ),
-                            height: tempHeight-70, width: (tempHeight-100), //박스 크기
+                            height: tempHeight-70, width: (tempHeight-100),
 
                             child: Column(
                               children: [
@@ -247,11 +247,11 @@ class _FoodSelectionState extends State<FoodSelection> {
           children: [
             GestureDetector(
               onTap: () async {
-                await showDialog(context: context, barrierDismissible: true, builder: (context) {
+                await showDialog(context: context, barrierDismissible: true, builder: (context) { 
                   return AlertDialog(
                     content: addOverrary(),
                   );
-                }).then((value) => {
+                }).then((value) => {  //클릭 후 오버레이 갔다가 돌아와서 실행
                   setState(() {})
                 });
               },
@@ -261,9 +261,9 @@ class _FoodSelectionState extends State<FoodSelection> {
               ),
             ),
 
-            IconButton(onPressed: () async {
+            IconButton(onPressed: () async { //블루투스 버튼
               Navigator.push(context, MaterialPageRoute(builder: (context) => connect())).then((value) => {
-                if(deviceStatus == 2)  readroop()
+                if(deviceStatus == 2)  readroop()  //갔다 와서 연결되었을시 읽기 시작
               });
             }, icon: Icon(Icons.bluetooth))
 
@@ -277,30 +277,37 @@ class _FoodSelectionState extends State<FoodSelection> {
 }
 
 void readroop() {
-  debugPrint("readroop");
+  //그냥 블루투스 계속 읽는 코드
   bluetoothClassicPlugin.onDeviceDataReceived().listen((event) {
 
     data = Uint8List.fromList(event);
     preS = S;
     S = String.fromCharCodes(data);
+    
+    try {
+      int k = int.parse(S);
+    } catch(e) {
+      if(double.parse(S) - double.parse(preS) < -15) {
+        S = preS;
+      } //이전 값 대비 값이 튀면 버림 (블루투스 print 값 누락 문제 대응)
 
-    if(double.parse(S) - double.parse(preS) < -15) {
-      S = preS;
-    }
+      
+    } //값이 실수값이 아니면 버림 (블루투스 print 값 누락 문제 대응)
 
     debugPrint(S);
   });
-  }
+}
 
 
 
 
-class addOverrary extends StatelessWidget {
+class addOverrary extends StatelessWidget { //음식 추가 오버레이
+
   addOverrary();
 
-  TextEditingController h = TextEditingController();
-  TextEditingController t = TextEditingController();
-  TextEditingController n = TextEditingController();
+  TextEditingController h = TextEditingController(); //heat
+  TextEditingController t = TextEditingController(); //time
+  TextEditingController n = TextEditingController(); //name
 
 
   @override
@@ -333,7 +340,7 @@ class addOverrary extends StatelessWidget {
                       Container(
                         child : Column(
                           children: [
-                            Container(
+                            Container( //입력창 이름
                               width: screenwidth*0.5/1.2,
                               child:TextField(
                                 controller: n,
@@ -345,7 +352,7 @@ class addOverrary extends StatelessWidget {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: [
-                                Container(
+                                Container( //입력창 온도
                                   width: screenwidth*0.5/3,
                                   child:TextField(
                                     controller: h,
@@ -355,8 +362,7 @@ class addOverrary extends StatelessWidget {
                                   ), 
                                 ),
 
-                                Container(
-                                  
+                                Container( //입력창 시간
                                   width: screenwidth*0.5/3,
                                   child:TextField(
                                     controller: t,
@@ -370,10 +376,11 @@ class addOverrary extends StatelessWidget {
                           ],
                         )
                       ),
-                      SizedBox(height: 10,),
+                      SizedBox(height: 10),
                       ElevatedButton(onPressed: () {
+                        //음식 목록에 추가
                         explore.add(Explore(name: n.text, time: [int.parse(t.text),int.parse(t.text)], heat: [int.parse(h.text),int.parse(h.text)], img: Image.asset("assets/temp.png")));
-                        Navigator.pop(context);
+                        Navigator.pop(context); //현재화면(오버레이) 삭제
                       }, child: Icon(Icons.check))
                     ],
                   );

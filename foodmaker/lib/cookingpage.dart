@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:foodmaker/value.dart';
 import 'package:vibration/vibration.dart';
 
@@ -15,14 +14,14 @@ class cookingInfo extends StatefulWidget {
 
 class _cookingInfoState extends State<cookingInfo> {
 
-  int _selectedPage = 1;
-  List<Widget> _selectwidget = <Widget>[
+  int _selectedPage = 1; //네비게이터바에 사용
+  List<Widget> _selectwidget = <Widget>[ //네비게이터바에 사용
     Cooking(),
     Info()
   ];
 
 
-  void _onItemTapped(int index) {
+  void _onItemTapped(int index) { //네비게이터바에 사용
     setState(() {
       _selectedPage = index;
     });
@@ -46,7 +45,7 @@ class _cookingInfoState extends State<cookingInfo> {
 
       body: Container(
         height: screenheight-100, width: screenwidth,
-        child: SingleChildScrollView(
+        child: SingleChildScrollView( //밑에 입력창에 화면깨짐 방지용도
           physics: NeverScrollableScrollPhysics(),
           child: Container(
             height: screenheight-100, width: screenwidth,
@@ -72,7 +71,7 @@ class _cookingInfoState extends State<cookingInfo> {
 }
 
 
-class Cooking extends StatefulWidget {
+class Cooking extends StatefulWidget { //요리 페이지
   const Cooking({super.key});
 
   @override
@@ -91,13 +90,13 @@ class _CookingState extends State<Cooking> {
   }
   late Timer _timer;
 
-  void _startTimer() {
+  void _startTimer() { //타이머 시작
     _timer = Timer.periodic(Duration(seconds: 1), (timer) {
       setState(() {
         seconds--;
       });
 
-      if (seconds == 0) {
+      if (seconds == 0) { //타이머 끝날 시 
         _timer.cancel();
         Vibration.vibrate(duration: 1000);  //진동기능진동기능
       }
@@ -117,7 +116,7 @@ class _CookingState extends State<Cooking> {
         children: [
           Column(
             children: [
-              Divider(color: Colors.black,thickness: 1),
+              Divider(color: Colors.black,thickness: 1), //구분선
               
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -147,13 +146,13 @@ class _CookingState extends State<Cooking> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Text("현재 ",style: TextStyle(fontSize: 20,color: Colors.black,decoration: TextDecoration.none)),
-                  Text(double.parse(S).toString(),style: TextStyle(fontSize: 40,color: Colors.black,decoration: TextDecoration.none)),
+                  Text(double.parse(S).toString(),style: TextStyle(fontSize: 40,color: Colors.black,decoration: TextDecoration.none)), //현재 온도 표시
                   Text("°C",style: TextStyle(fontSize: 20,color: Colors.black,decoration: TextDecoration.none)),
 
                   SizedBox(width: 15,),
 
                   Text("남은 시간 ",style: TextStyle(fontSize: 20,color: Colors.black,decoration: TextDecoration.none)),
-                  Text(seconds.toString(),style: TextStyle(fontSize: 40,color: Colors.black,decoration: TextDecoration.none)),
+                  Text(seconds.toString(),style: TextStyle(fontSize: 40,color: Colors.black,decoration: TextDecoration.none)), //현재 시간 표시
                   Text("초",style: TextStyle(fontSize: 20,color: Colors.black,decoration: TextDecoration.none)),
                 ],
               ),
@@ -163,6 +162,7 @@ class _CookingState extends State<Cooking> {
                   height: screenheight/3,
                   width: screenheight,
                   decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.vertical(top: Radius.circular(40))),
+                  //삼항연산으로 모든 상황에서의 이미지 넣음 
                   child: double.parse(S) > finalheat+10 ? Image.asset("assets/hot.png") : double.parse(S) < finalheat-10 ? Image.asset("assets/cold.png") : seconds > 30 ? Image.asset("assets/well.png") : seconds == 0 ? Image.asset("assets/done.png") : Image.asset("assets/almost.png")
                 )
               )
@@ -175,7 +175,7 @@ class _CookingState extends State<Cooking> {
 }
 
 
-class Info extends StatefulWidget {
+class Info extends StatefulWidget { //음식 정보 페이지
   const Info({super.key});
 
   @override
@@ -239,6 +239,7 @@ class _InfoState extends State<Info> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  //권장 온도, 시간 표시시
                   Text("🌡"+myfood[0].heat[0].toString()+"~"+myfood[0].heat[1].toString()+"°C",style: TextStyle(fontSize: 20,color: Colors.black,decoration: TextDecoration.none)),
                   SizedBox(width: 20),
                   Text("🕦 "+myfood[0].time[0].toString()+"~"+myfood[0].time[1].toString()+"m",style: TextStyle(fontSize: 20,color: Colors.black,decoration: TextDecoration.none)),
@@ -258,10 +259,8 @@ class _InfoState extends State<Info> {
                         return AlertDialog(
                           content: inputOverray(kind: 0),
                         );
-                      }).then((value) => {
-                        setState(() {
-                          debugPrint("$finalheat");
-                        })
+                      }).then((value) => { //값 변경 오버레이 갔다 온 후 실행
+                        setState(() {})
                       });
                     },
                     child: Container(
@@ -274,10 +273,8 @@ class _InfoState extends State<Info> {
                         return AlertDialog(
                           content: inputOverray(kind: 1),
                         );
-                      }).then((value) => {
-                        setState(() {
-                          debugPrint("$finalheat");
-                        })
+                      }).then((value) => { //값 변경 오버레이 갔다 온 후 실행
+                        setState(() {})
                       });
                     },
                     child: Container(
@@ -298,8 +295,8 @@ class _InfoState extends State<Info> {
 
 
 
-class inputOverray extends StatelessWidget {
-  int kind;
+class inputOverray extends StatelessWidget { //입력 오버레이 창
+  int kind; //온도인지 시간인지 구분변수
   inputOverray({required this.kind});
 
   TextEditingController a = TextEditingController();
@@ -332,7 +329,6 @@ class inputOverray extends StatelessWidget {
                   return Column(
                     children: [
                       Container(
-
                         child:TextField(
                           controller: a,
                           autofocus: true,
@@ -342,13 +338,13 @@ class inputOverray extends StatelessWidget {
                       ),
                       SizedBox(height: 10),
                       ElevatedButton(onPressed: () {
-                        if(kind == 0) {
+                        if(kind == 0) { //구분 후 값추가
                           finalheat = int.parse(a.text);
                         }else {
                           finaltime = int.parse(a.text);
                         }
 
-                        Navigator.pop(context);
+                        Navigator.pop(context); //화면(오버레이) 지우기
                       }, child: Icon(Icons.check))
                     ],
                   );
